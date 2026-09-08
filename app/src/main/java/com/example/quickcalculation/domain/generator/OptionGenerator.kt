@@ -53,7 +53,7 @@ object OptionGenerator {
 
         // 小数值 correct（如增长率的小数形式 0.1、0.01）在乘法扰动下会舍入坍缩回 correct 本身，
         // 导致干扰项不足。此时改按「舍入精度」的绝对步长，保证能得到互异的干扰项。
-        if (distractors.size < 3 && abs(correct) < 1.0) {
+        if (distractors.size < 3 && abs(correct) < 10.0) {
             val unit = when (difficulty) {
                 Difficulty.EASY -> 1.0
                 Difficulty.MEDIUM -> 0.1
