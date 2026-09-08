@@ -16,7 +16,7 @@ object GrowthRateGenerator {
         val dec = GenerationUtil.decimals(difficulty)
         val year = GenerationUtil.year(random)
         val a = GenerationUtil.roundForDifficulty(bg.currentValue, difficulty)
-        val answer = GenerationUtil.roundForDifficulty(bg.growthRate, difficulty)
+        val answer = GenerationUtil.roundForDifficulty(bg.growthRate * 100.0, difficulty)
 
         return if (random.nextBoolean()) {
             // r = (A − B) ÷ B
