@@ -35,4 +35,12 @@ class OptionGeneratorTest {
         assertEquals(4, opts.distinct().size)
         assertTrue((-0.10) in opts)
     }
+
+    @Test
+    fun build_zeroCorrect_returnsFourDistinctOptions() {
+        val opts = OptionGenerator.build(0.0, Difficulty.EASY, Random(1))
+        assertEquals(4, opts.size)
+        assertEquals(4, opts.distinct().size)
+        assertTrue(0.0 in opts)
+    }
 }
