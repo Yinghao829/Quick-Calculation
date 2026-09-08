@@ -51,6 +51,24 @@ object OptionGenerator {
             k++
         }
 
+        // 小数值 correct（如增长率的小数形式 0.1、0.01）在乘法扰动下会舍入坍缩回 correct 本身，
+        // 导致干扰项不足。此时改按「舍入精度」的绝对步长，保证能得到互异的干扰项。
+        if (distractors.size < 3 && abs(correct) < 1.0) {
+            val unit = when (difficulty) {
+                Difficulty.EASY -> 1.0
+                Difficulty.MEDIUM -> 0.1
+                Difficulty.HARD -> 0.01
+            }
+            var step = 1
+            while (distractors.size < 3 && step < 100) {
+                val up = GenerationUtil.roundForDifficulty(correct + unit * step, difficulty)
+                val down = GenerationUtil.roundForDifficulty(correct - unit * step, difficulty)
+                if (up != correct && (up > 0.0 || correct <= 0.0) && up !in distractors) distractors = distractors + up
+                if (down != correct && (down > 0.0 || correct <= 0.0) && down !in distractors) distractors = distractors + down
+                step++
+            }
+        }
+
         return (distractors.shuffled(random).take(3) + correct).shuffled(random)
     }
 }
