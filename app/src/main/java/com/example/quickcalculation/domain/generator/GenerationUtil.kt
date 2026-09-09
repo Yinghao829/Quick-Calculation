@@ -8,11 +8,7 @@ import kotlin.math.abs
 
 object GenerationUtil {
 
-    fun decimals(difficulty: Difficulty): Int = when (difficulty) {
-        Difficulty.EASY -> 0
-        Difficulty.MEDIUM -> 1
-        Difficulty.HARD -> 2
-    }
+    fun decimals(difficulty: Difficulty): Int = PrecisionPolicy.decimals(difficulty)
 
     fun roundForDifficulty(value: Double, difficulty: Difficulty): Double =
         NumberUtil.round(value, decimals(difficulty))

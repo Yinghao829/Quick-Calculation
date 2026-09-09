@@ -57,7 +57,7 @@ fun QuestionScreen(vm: QuizViewModel, onBack: () -> Unit) {
                     val showGreen = state.answered && isCorrectOption
                     val showRed = state.answered && isSelected && !isCorrectOption
                     OptionButton(
-                        text = AnswerFormatter.format(opt, q.unit),
+                        text = AnswerFormatter.format(opt, q.unit, q.difficulty),
                         selected = isSelected,
                         green = showGreen,
                         red = showRed,
@@ -89,7 +89,7 @@ fun QuestionScreen(vm: QuizViewModel, onBack: () -> Unit) {
                 Spacer(Modifier.height(16.dp))
                 ResultBar(
                     correct = state.isCorrect == true,
-                    answer = AnswerFormatter.format(q.correctAnswer, q.unit),
+                    answer = AnswerFormatter.format(q.correctAnswer, q.unit, q.difficulty),
                     explanation = q.explanation,
                 )
             }
