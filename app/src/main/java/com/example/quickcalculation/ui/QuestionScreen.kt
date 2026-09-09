@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.quickcalculation.ui.theme.QuickColors
+import com.example.quickcalculation.ui.theme.LocalSuccessColor
 import com.example.quickcalculation.viewmodel.AnswerMode
 import com.example.quickcalculation.viewmodel.QuizViewModel
 
@@ -36,7 +36,7 @@ import com.example.quickcalculation.viewmodel.QuizViewModel
 fun QuestionScreen(vm: QuizViewModel, onBack: () -> Unit) {
     val state by vm.state.collectAsState()
     val q = state.question
-    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)) {
+    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = onBack) { Text("返回") }
@@ -46,7 +46,7 @@ fun QuestionScreen(vm: QuizViewModel, onBack: () -> Unit) {
         Spacer(Modifier.height(8.dp))
         if (q != null) {
             Text("${q.type.label} · ${q.subType}", style = MaterialTheme.typography.labelLarge,
-                color = QuickColors.PrimaryLight)
+                color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(12.dp))
             Text(q.stem, style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(16.dp))
@@ -74,7 +74,7 @@ fun QuestionScreen(vm: QuizViewModel, onBack: () -> Unit) {
                     isError = state.fillInput.isNotBlank() && state.fillInput.toDoubleOrNull() == null,
                     supportingText = {
                         if (state.fillInput.isNotBlank() && state.fillInput.toDoubleOrNull() == null) {
-                            Text("请输入数字", color = QuickColors.Error)
+                            Text("请输入数字", color = MaterialTheme.colorScheme.error)
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -109,23 +109,24 @@ private fun OptionButton(
     red: Boolean,
     onClick: () -> Unit,
 ) {
+    val success = LocalSuccessColor.current
     val borderColor = when {
-        green -> QuickColors.Success
-        red -> QuickColors.Error
-        selected -> QuickColors.PrimaryLight
+        green -> success
+        red -> MaterialTheme.colorScheme.error
+        selected -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.outline
     }
     val containerColor = when {
-        green -> QuickColors.Success.copy(alpha = 0.15f)
-        red -> QuickColors.Error.copy(alpha = 0.15f)
-        selected -> QuickColors.PrimaryLight.copy(alpha = 0.12f)
+        green -> success.copy(alpha = 0.15f)
+        red -> MaterialTheme.colorScheme.error.copy(alpha = 0.15f)
+        selected -> MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
         else -> Color.Transparent
     }
     val borderWidth = if (green || red || selected) 2.dp else 1.dp
     OutlinedButton(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth().height(48.dp),
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(
             containerColor = containerColor,
         ),
@@ -137,21 +138,21 @@ private fun OptionButton(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text, style = MaterialTheme.typography.bodyLarge)
-            if (green) Text("✓", color = QuickColors.Success)
-            if (red) Text("✗", color = QuickColors.Error)
+            if (green) Text("✓", color = success)
+            if (red) Text("✗", color = MaterialTheme.colorScheme.error)
         }
     }
 }
 
 @Composable
 private fun ResultBar(correct: Boolean, answer: String, explanation: String) {
-    val color = if (correct) QuickColors.Success else QuickColors.Error
+    val color = if (correct) LocalSuccessColor.current else MaterialTheme.colorScheme.error
     val mark = if (correct) "✓" else "✗"
     val markText = if (correct) "回答正确" else "回答错误"
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
+            .background(color.copy(alpha = 0.12f), RoundedCornerShape(16.dp))
             .padding(12.dp),
     ) {
         Text(

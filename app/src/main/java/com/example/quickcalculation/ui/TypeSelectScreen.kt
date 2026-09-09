@@ -35,7 +35,7 @@ fun TypeSelectScreen(
 ) {
     val state by vm.state.collectAsState()
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
     ) {
         Text("选择题型", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))

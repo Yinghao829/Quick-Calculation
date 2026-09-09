@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 
 private val LightScheme = lightColorScheme(
     primary = QuickColors.PrimaryLight,
@@ -29,7 +30,7 @@ private val DarkScheme = darkColorScheme(
     onSurface = QuickColors.DarkTextPrimary,
     onSurfaceVariant = QuickColors.DarkTextSecondary,
     outline = QuickColors.DarkDivider,
-    error = QuickColors.Error,
+    error = QuickColors.ErrorDark,
 )
 
 @Composable
@@ -39,9 +40,13 @@ fun QuickCalculationTheme(themeMode: ThemeMode, content: @Composable () -> Unit)
         ThemeMode.DARK -> true
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
     }
-    MaterialTheme(
-        colorScheme = if (isDark) DarkScheme else LightScheme,
-        typography = QuickTypography,
-        content = content,
-    )
+    CompositionLocalProvider(
+        LocalSuccessColor provides if (isDark) QuickColors.SuccessDark else QuickColors.Success,
+    ) {
+        MaterialTheme(
+            colorScheme = if (isDark) DarkScheme else LightScheme,
+            typography = QuickTypography,
+            content = content,
+        )
+    }
 }
