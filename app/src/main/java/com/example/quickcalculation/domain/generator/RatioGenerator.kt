@@ -27,13 +27,13 @@ object RatioGenerator {
             0 -> Triple("现期比重", presentRatio(p, q),
                 "现期比重 = 部分现期 ÷ 整体现期 = ${NumberUtil.format(p, dec)} ÷ ${NumberUtil.format(q, dec)} = ${NumberUtil.formatPercent(presentRatio(p, q))}")
             1 -> Triple("基期比重", baseRatio(p, q, a, b),
-                "基期比重 = (P/Q) × (1+b) ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${NumberUtil.formatFactor(b)} ÷ ${NumberUtil.formatFactor(a)} = ${NumberUtil.formatPercent(baseRatio(p, q, a, b))}")
+                "基期比重 = (P/Q) × (1+b) ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${GenerationUtil.formatFactor(b, difficulty)} ÷ ${GenerationUtil.formatFactor(a, difficulty)} = ${NumberUtil.formatPercent(baseRatio(p, q, a, b))}")
             else -> {
                 // 两期比重差可为负（部分增速低于整体）；V1 仅出正差距题（与增长量任务舍弃「减少量」同理），
                 // 并对接近 0 的差距取一个下限，避免 roundForDifficulty 后坍缩为 0。
                 val gap = abs(gapRatio(p, q, a, b))
                 Triple("两期比重差", gap,
-                    "两期比重差 = (P/Q) × |a−b| ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${NumberUtil.formatPercent(abs(a - b))} ÷ ${NumberUtil.formatFactor(a)} = ${NumberUtil.formatPercent(gap)}")
+                    "两期比重差 = (P/Q) × |a−b| ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${GenerationUtil.formatRate(abs(a - b), difficulty)} ÷ ${GenerationUtil.formatFactor(a, difficulty)} = ${NumberUtil.formatPercent(gap)}")
             }
         }
         // 比重/比重差天然落在小数区间（0~1），选择题按百分比（%）作答，故答案以百分点计（×100）。
@@ -52,7 +52,7 @@ object RatioGenerator {
             else -> listOf((p / q) * abs(a - b) * 100, (p / q) * abs(a - b) / (1 + b) * 100, abs(a - b) * 100)
         }
         val unit = if (subType == "两期比重差") "个百分点" else "%"
-        val stem = "${year}年${topic.name}中，某部分为${NumberUtil.format(p, dec)}${topic.unit}，整体为${NumberUtil.format(q, dec)}${topic.unit}，部分增速${NumberUtil.formatPercent(a)}，整体增速${NumberUtil.formatPercent(b)}，求${subType}。"
+        val stem = "${year}年${topic.name}中，某部分为${NumberUtil.format(p, dec)}${topic.unit}，整体为${NumberUtil.format(q, dec)}${topic.unit}，部分增速${GenerationUtil.formatRate(a, difficulty)}，整体增速${GenerationUtil.formatRate(b, difficulty)}，求${subType}。"
         return Question(QuestionType.RATIO, subType, topic.name, stem, answerRounded,
             OptionGenerator.build(answerRounded, difficulty, random, distractorsPct), unit, explanation, difficulty)
     }

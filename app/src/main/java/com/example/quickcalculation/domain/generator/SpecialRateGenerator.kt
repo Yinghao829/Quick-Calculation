@@ -22,13 +22,12 @@ object SpecialRateGenerator {
             // Ruling 2: clamp rates to a positive lower bound (0.005). sampleRate can return 0.0 for
             // low-growth topics (常住人口 growthRange 0.0..0.02), which would collapse the answer to 0
             // and violate correctAnswer > 0.0.
-            val r1 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(0.005)
-            val r2 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(0.005)
+            val r1 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(GenerationUtil.minimumDisplayableRate(difficulty))
+            val r2 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(GenerationUtil.minimumDisplayableRate(difficulty))
             val answer = intervalRate(r1, r2)
-            val stem = "${year - 2}年${topic.name}增长${NumberUtil.formatPercent(r1)}，${year - 1}年增长${NumberUtil.formatPercent(r2)}，求${year - 2}年—${year}年${topic.name}的间隔增长率。"
-            val explanation = "间隔增长率 = r₁ + r₂ + r₁×r₂ = ${NumberUtil.formatPercent(r1)} + ${NumberUtil.formatPercent(r2)} + ${NumberUtil.formatPercent(r1)}×${NumberUtil.formatPercent(r2)} = ${NumberUtil.formatPercent(answer)}"
+            val stem = "${year - 2}年${topic.name}增长${GenerationUtil.formatRate(r1, difficulty)}，${year - 1}年增长${GenerationUtil.formatRate(r2, difficulty)}，求${year - 2}年—${year}年${topic.name}的间隔增长率。"
+            val explanation = "间隔增长率 = r₁ + r₂ + r₁×r₂ = ${GenerationUtil.formatRate(r1, difficulty)} + ${GenerationUtil.formatRate(r2, difficulty)} + ${GenerationUtil.formatRate(r1, difficulty)}×${GenerationUtil.formatRate(r2, difficulty)} = ${GenerationUtil.formatRate(answer, difficulty)}"
             // Ruling 1: unit "%" stores percentage points, so scale the fractional answer by 100.
-            // Ruling 3: explanation keeps formatPercent(...) rendering "%" as-is; pure function unchanged.
             Question(QuestionType.SPECIAL_RATE, "间隔增长率", topic.name, stem, GenerationUtil.roundForDifficulty(answer * 100.0, difficulty),
                 OptionGenerator.build(GenerationUtil.roundForDifficulty(answer * 100.0, difficulty), difficulty, random,
                     listOf((r1 + r2) * 100, r2 * 100, (r1 + r2 + r2 * r2) * 100)), "%", explanation, difficulty)
@@ -37,11 +36,11 @@ object SpecialRateGenerator {
             val b1 = GenerationUtil.sampleBase(topic, difficulty, random)
             val b2 = GenerationUtil.sampleBase(topic, difficulty, random)
             // Ruling 2: positive lower bound on rates (see 间隔 branch comment).
-            val r1 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(0.005)
-            val r2 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(0.005)
+            val r1 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(GenerationUtil.minimumDisplayableRate(difficulty))
+            val r2 = GenerationUtil.sampleRate(topic, difficulty, random).coerceAtLeast(GenerationUtil.minimumDisplayableRate(difficulty))
             val answer = mixedRate(b1, r1, b2, r2)
-            val stem = "${year}年${topic.name}中，A部分为${NumberUtil.format(b1, dec)}${topic.unit}（增速${NumberUtil.formatPercent(r1)}），B部分为${NumberUtil.format(b2, dec)}${topic.unit}（增速${NumberUtil.formatPercent(r2)}），求整体混合增长率。"
-            val explanation = "混合增长率 = (B₁r₁ + B₂r₂) ÷ (B₁ + B₂) = (${NumberUtil.format(b1, dec)}×${NumberUtil.formatPercent(r1)} + ${NumberUtil.format(b2, dec)}×${NumberUtil.formatPercent(r2)}) ÷ ${NumberUtil.format(b1 + b2, dec)} = ${NumberUtil.formatPercent(answer)}"
+            val stem = "${year}年${topic.name}中，A部分为${NumberUtil.format(b1, dec)}${topic.unit}（增速${GenerationUtil.formatRate(r1, difficulty)}），B部分为${NumberUtil.format(b2, dec)}${topic.unit}（增速${GenerationUtil.formatRate(r2, difficulty)}），求整体混合增长率。"
+            val explanation = "混合增长率 = (B₁r₁ + B₂r₂) ÷ (B₁ + B₂) = (${NumberUtil.format(b1, dec)}×${GenerationUtil.formatRate(r1, difficulty)} + ${NumberUtil.format(b2, dec)}×${GenerationUtil.formatRate(r2, difficulty)}) ÷ ${NumberUtil.format(b1 + b2, dec)} = ${GenerationUtil.formatRate(answer, difficulty)}"
             // Ruling 1: scale the fractional answer by 100 for the "%" unit.
             Question(QuestionType.SPECIAL_RATE, "混合增长率", topic.name, stem, GenerationUtil.roundForDifficulty(answer * 100.0, difficulty),
                 OptionGenerator.build(GenerationUtil.roundForDifficulty(answer * 100.0, difficulty), difficulty, random,

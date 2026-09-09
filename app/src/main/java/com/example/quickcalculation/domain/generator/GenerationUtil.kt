@@ -4,7 +4,6 @@ import com.example.quickcalculation.domain.model.Difficulty
 import com.example.quickcalculation.domain.model.Topic
 import com.example.quickcalculation.domain.util.NumberUtil
 import kotlin.random.Random
-import kotlin.math.abs
 
 object GenerationUtil {
 
@@ -22,20 +21,20 @@ object GenerationUtil {
         return if (v <= 0.0) topic.magnitude.start else v
     }
 
-    fun sampleRate(topic: Topic, difficulty: Difficulty, random: Random): Double {
-        // 优先从难度池取（保证可手算），但必须落在题材合理区间内（R5）。
-        repeat(40) {
-            val r = GrowthRatePool.sample(difficulty, random)
-            if (r in topic.growthRange) return r
-        }
-        // 低增速题材（人口/CPI）：池内无满足值，改用 0.5% 步长的干净值。
-        val lo = topic.growthRange.start
-        val hi = topic.growthRange.endInclusive
-        val step = 0.005
-        val steps = ((hi - lo) / step).toInt().coerceAtLeast(1)
-        val r = lo + random.nextInt(steps + 1) * step
-        return r.coerceAtMost(hi)
-    }
+    fun sampleRate(topic: Topic, difficulty: Difficulty, random: Random): Double =
+        GrowthRatePool.sample(difficulty, random, topic.growthRange)
+
+    fun minimumDisplayableRate(difficulty: Difficulty): Double =
+        GrowthRatePool.minimumDisplayableRate(difficulty)
+
+    fun formatRate(rate: Double, difficulty: Difficulty): String =
+        NumberUtil.formatPercent(rate, GrowthRatePool.percentDecimals(difficulty))
+
+    fun formatTrend(rate: Double, difficulty: Difficulty): String =
+        if (rate < 0) "下降${formatRate(-rate, difficulty)}" else "增长${formatRate(rate, difficulty)}"
+
+    fun formatFactor(rate: Double, difficulty: Difficulty): String =
+        NumberUtil.format(1 + rate, GrowthRatePool.rateDecimals(difficulty))
 
     fun year(random: Random): Int = 2020 + random.nextInt(6)
 }
