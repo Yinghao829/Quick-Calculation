@@ -71,12 +71,19 @@ fun QuestionScreen(vm: QuizViewModel, onBack: () -> Unit) {
                     onValueChange = { vm.setFillInput(it) },
                     label = { Text("输入答案（${q.unit}）") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    isError = state.fillInput.isNotBlank() && state.fillInput.toDoubleOrNull() == null,
+                    supportingText = {
+                        if (state.fillInput.isNotBlank() && state.fillInput.toDoubleOrNull() == null) {
+                            Text("请输入数字", color = QuickColors.Error)
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(8.dp))
-                Button(onClick = { vm.submitFill(state.fillInput) }, enabled = !state.answered) {
-                    Text("确认")
-                }
+                Button(
+                    onClick = { vm.submitFill(state.fillInput) },
+                    enabled = !state.answered && state.fillInput.isNotBlank(),
+                ) { Text("确认") }
             }
             if (state.answered) {
                 Spacer(Modifier.height(16.dp))
