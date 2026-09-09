@@ -43,4 +43,25 @@ class OptionGeneratorTest {
         assertEquals(4, opts.distinct().size)
         assertTrue(0.0 in opts)
     }
+
+    @Test
+    fun build_usesDistractorsAndKeepsInvariants() {
+        val rnd = Random(5)
+        val opts = OptionGenerator.build(500.0, Difficulty.EASY, rnd, listOf(480.0, 100.0, 550.0))
+        assertEquals(4, opts.size)
+        assertEquals(4, opts.distinct().size)
+        assertTrue(500.0 in opts)
+        assertTrue(opts.all { it > 0.0 })
+    }
+
+    @Test
+    fun build_correctPositionRoughlyBalanced() {
+        val rnd = Random(3)
+        val counts = IntArray(4)
+        repeat(500) {
+            val opts = OptionGenerator.build(100.0, Difficulty.MEDIUM, rnd)
+            counts[opts.indexOf(100.0)]++
+        }
+        counts.forEachIndexed { idx, count -> assertTrue("位置 $idx 出现 $count/500 过少", count > 50) }
+    }
 }

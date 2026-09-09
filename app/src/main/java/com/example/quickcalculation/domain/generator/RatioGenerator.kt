@@ -46,9 +46,14 @@ object RatioGenerator {
         }
         val rawAnswerPct = if (subType == "两期比重差") maxOf(answer * 100.0, halfStep) else answer * 100.0
         val answerRounded = GenerationUtil.roundForDifficulty(rawAnswerPct, difficulty)
+        val distractorsPct = when (subType) {
+            "现期比重" -> listOf((q - p) / q * 100, p / (q - p) * 100, q / p * 100)
+            "基期比重" -> listOf(p / q * 100, (p / q) * (1 + a) / (1 + b) * 100, (p / q) * (1 + b) / (1 - a) * 100)
+            else -> listOf((p / q) * abs(a - b) * 100, (p / q) * abs(a - b) / (1 + b) * 100, abs(a - b) * 100)
+        }
         val unit = if (subType == "两期比重差") "个百分点" else "%"
         val stem = "${year}年${topic.name}中，某部分为${NumberUtil.format(p, dec)}${topic.unit}，整体为${NumberUtil.format(q, dec)}${topic.unit}，部分增速${NumberUtil.formatPercent(a)}，整体增速${NumberUtil.formatPercent(b)}，求${subType}。"
         return Question(QuestionType.RATIO, subType, topic.name, stem, answerRounded,
-            OptionGenerator.build(answerRounded, difficulty, random), unit, explanation, difficulty)
+            OptionGenerator.build(answerRounded, difficulty, random, distractorsPct), unit, explanation, difficulty)
     }
 }

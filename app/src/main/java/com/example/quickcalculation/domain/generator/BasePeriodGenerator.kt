@@ -4,6 +4,7 @@ import com.example.quickcalculation.domain.model.Difficulty
 import com.example.quickcalculation.domain.model.Question
 import com.example.quickcalculation.domain.model.QuestionType
 import com.example.quickcalculation.domain.util.NumberUtil
+import kotlin.math.abs
 import kotlin.random.Random
 
 object BasePeriodGenerator {
@@ -27,7 +28,7 @@ object BasePeriodGenerator {
             Question(
                 type = QuestionType.BASE_PERIOD, subType = "求基期量", topic = topic.name,
                 stem = stem, correctAnswer = answer,
-                options = OptionGenerator.build(answer, difficulty, random, listOf(a * (1 - r))),
+                options = OptionGenerator.build(answer, difficulty, random, listOf(a * (1 - r), abs(a - b), a * (1 + r))),
                 unit = topic.unit, explanation = explanation, difficulty = difficulty,
             )
         } else {
@@ -40,7 +41,7 @@ object BasePeriodGenerator {
             Question(
                 type = QuestionType.BASE_PERIOD, subType = "求现期量", topic = topic.name,
                 stem = stem, correctAnswer = answer,
-                options = OptionGenerator.build(answer, difficulty, random, listOf(b * (1 + r / 2))),
+                options = OptionGenerator.build(answer, difficulty, random, listOf(b * (1 - r), abs(b * r), b / (1 + r))),
                 unit = topic.unit, explanation = explanation, difficulty = difficulty,
             )
         }

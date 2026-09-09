@@ -30,7 +30,8 @@ object SpecialRateGenerator {
             // Ruling 1: unit "%" stores percentage points, so scale the fractional answer by 100.
             // Ruling 3: explanation keeps formatPercent(...) rendering "%" as-is; pure function unchanged.
             Question(QuestionType.SPECIAL_RATE, "间隔增长率", topic.name, stem, GenerationUtil.roundForDifficulty(answer * 100.0, difficulty),
-                OptionGenerator.build(GenerationUtil.roundForDifficulty(answer * 100.0, difficulty), difficulty, random), "%", explanation, difficulty)
+                OptionGenerator.build(GenerationUtil.roundForDifficulty(answer * 100.0, difficulty), difficulty, random,
+                    listOf((r1 + r2) * 100, r2 * 100, (r1 + r2 + r2 * r2) * 100)), "%", explanation, difficulty)
         } else {
             // 混合增长率：r = (B₁r₁ + B₂r₂) ÷ (B₁ + B₂)
             val b1 = GenerationUtil.sampleBase(topic, difficulty, random)
@@ -43,7 +44,8 @@ object SpecialRateGenerator {
             val explanation = "混合增长率 = (B₁r₁ + B₂r₂) ÷ (B₁ + B₂) = (${NumberUtil.format(b1, dec)}×${NumberUtil.formatPercent(r1)} + ${NumberUtil.format(b2, dec)}×${NumberUtil.formatPercent(r2)}) ÷ ${NumberUtil.format(b1 + b2, dec)} = ${NumberUtil.formatPercent(answer)}"
             // Ruling 1: scale the fractional answer by 100 for the "%" unit.
             Question(QuestionType.SPECIAL_RATE, "混合增长率", topic.name, stem, GenerationUtil.roundForDifficulty(answer * 100.0, difficulty),
-                OptionGenerator.build(GenerationUtil.roundForDifficulty(answer * 100.0, difficulty), difficulty, random), "%", explanation, difficulty)
+                OptionGenerator.build(GenerationUtil.roundForDifficulty(answer * 100.0, difficulty), difficulty, random,
+                    listOf((r1 + r2) / 2 * 100, (b1 * r2 + b2 * r1) / (b1 + b2) * 100, maxOf(r1, r2) * 100)), "%", explanation, difficulty)
         }
     }
 }

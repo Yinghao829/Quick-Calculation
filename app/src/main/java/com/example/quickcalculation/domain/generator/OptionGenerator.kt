@@ -6,12 +6,14 @@ import kotlin.random.Random
 
 object OptionGenerator {
 
-    /** 生成 4 个乱序选项：1 个正确项 + 3 个干扰项（难度控制差距，量级接近、互不重复）。 */
+    /** 生成 4 个乱序选项：1 个正确项 + 3 个干扰项。
+     *  [distractors] 为题型生成器按「错误路径」（公式/概念/计算错误）计算的候选，优先采用；
+     *  不足 3 个时以量级接近的邻近值兜底。难度控制差距，量级接近、互不重复。 */
     fun build(
         correct: Double,
         difficulty: Difficulty,
         random: Random,
-        extra: List<Double> = emptyList(),
+        distractorCandidates: List<Double> = emptyList(),
     ): List<Double> {
         val offsets = when (difficulty) {
             Difficulty.EASY -> listOf(-0.10, 0.10, -0.05, 0.05, 0.20, -0.20, 0.15, -0.15)
@@ -19,7 +21,7 @@ object OptionGenerator {
             Difficulty.HARD -> listOf(-0.01, 0.01, -0.005, 0.005, -0.02, 0.02, -0.015, 0.015)
         }
         val candidates = buildList {
-            extra.forEach { add(GenerationUtil.roundForDifficulty(it, difficulty)) }
+            distractorCandidates.forEach { add(GenerationUtil.roundForDifficulty(it, difficulty)) }
             offsets.forEach { add(GenerationUtil.roundForDifficulty(correct * (1 + it), difficulty)) }
         }
         var distractors = candidates
