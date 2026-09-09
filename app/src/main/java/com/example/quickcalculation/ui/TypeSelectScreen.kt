@@ -15,6 +15,8 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,7 @@ fun TypeSelectScreen(
     onThemeModeChange: (ThemeMode) -> Unit,
     onStart: () -> Unit,
 ) {
-    val state = vm.state
+    val state by vm.state.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
     ) {
@@ -39,7 +41,7 @@ fun TypeSelectScreen(
         Spacer(Modifier.height(16.dp))
         QuestionType.entries.forEach { type ->
             FilterChip(
-                selected = type in state.value.selectedTypes,
+                selected = type in state.selectedTypes,
                 onClick = { vm.toggleType(type) },
                 label = { Text(type.label) },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -49,16 +51,16 @@ fun TypeSelectScreen(
         Text("难度", style = MaterialTheme.typography.labelLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Difficulty.entries.forEach { d ->
-                FilterChip(selected = state.value.difficulty == d, onClick = { vm.setDifficulty(d) },
+                FilterChip(selected = state.difficulty == d, onClick = { vm.setDifficulty(d) },
                     label = { Text(difficultyLabel(d)) })
             }
         }
         Spacer(Modifier.height(24.dp))
         Text("作答模式", style = MaterialTheme.typography.labelLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(selected = state.value.answerMode == AnswerMode.CHOICE,
+            FilterChip(selected = state.answerMode == AnswerMode.CHOICE,
                 onClick = { vm.setAnswerMode(AnswerMode.CHOICE) }, label = { Text("选择") })
-            FilterChip(selected = state.value.answerMode == AnswerMode.FILL,
+            FilterChip(selected = state.answerMode == AnswerMode.FILL,
                 onClick = { vm.setAnswerMode(AnswerMode.FILL) }, label = { Text("填空") })
         }
         Spacer(Modifier.height(24.dp))
@@ -72,7 +74,7 @@ fun TypeSelectScreen(
         Spacer(Modifier.height(32.dp))
         Button(
             onClick = { vm.startQuiz(); onStart() },
-            enabled = state.value.selectedTypes.isNotEmpty(),
+            enabled = state.selectedTypes.isNotEmpty(),
             modifier = Modifier.fillMaxWidth().height(52.dp),
         ) { Text("开始练习") }
     }
