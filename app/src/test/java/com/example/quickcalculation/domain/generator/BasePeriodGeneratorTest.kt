@@ -4,6 +4,7 @@ import com.example.quickcalculation.domain.model.Difficulty
 import com.example.quickcalculation.domain.model.QuestionType
 import kotlin.random.Random
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -29,5 +30,20 @@ class BasePeriodGeneratorTest {
         val a = BasePeriodGenerator.generate(Difficulty.EASY, Random(123))
         val b = BasePeriodGenerator.generate(Difficulty.EASY, Random(123))
         assertEquals(a, b)
+    }
+
+    @Test
+    fun generate_declineStemUsesYearAndDown() {
+        val rnd = Random(99)
+        var seen = false
+        repeat(2000) {
+            val q = BasePeriodGenerator.generate(Difficulty.HARD, rnd)
+            assertFalse(q.stem.contains("求基期") || q.stem.contains("求现期"))
+            if (q.stem.contains("下降")) {
+                seen = true
+                assertTrue(q.correctAnswer > 0.0)
+            }
+        }
+        assertTrue(seen)
     }
 }

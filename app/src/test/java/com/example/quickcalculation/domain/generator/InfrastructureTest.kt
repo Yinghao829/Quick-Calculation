@@ -24,6 +24,17 @@ class InfrastructureTest {
     }
 
     @Test
+    fun growthRatePool_mediumHasIrregularRates() {
+        val m = GrowthRatePool.poolFor(Difficulty.MEDIUM)
+        assertTrue(m.any { it == 0.023 } && m.any { it == 0.091 } && m.any { it == 0.051 })
+    }
+
+    @Test
+    fun growthRatePool_easyHasDecline() {
+        assertTrue(GrowthRatePool.poolFor(Difficulty.EASY).any { it < 0.0 })
+    }
+
+    @Test
     fun topicRepository_hasEightTopicsAndFiltersRateTypes() {
         assertEquals(8, TopicRepository.topics.size)
         assertEquals(8, TopicRepository.topics.map { it.name }.distinct().size)
