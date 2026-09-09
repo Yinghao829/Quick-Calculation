@@ -31,7 +31,7 @@ object GrowthAmountGenerator {
             // X = A·r ÷ (1+r)
             val answer = GenerationUtil.roundForDifficulty(bg.currentValue * bg.growthRate / (1 + bg.growthRate), difficulty)
             val stem = "${year}年${topic.name}为${NumberUtil.format(a, dec)}${topic.unit}，同比增长${NumberUtil.formatPercent(r)}，求增长量。"
-            val explanation = "增长量 = 现期量 × 增长率 ÷ (1 + 增长率) = ${NumberUtil.format(a, dec)} × ${NumberUtil.formatPercent(r)} ÷ ${NumberUtil.format(1 + r, dec)} = ${NumberUtil.format(answer, dec)}${topic.unit}"
+            val explanation = "增长量 = 现期量 × 增长率 ÷ (1 + 增长率) = ${NumberUtil.format(a, dec)} × ${NumberUtil.formatPercent(r)} ÷ ${NumberUtil.formatFactor(r)} = ${NumberUtil.format(answer, dec)}${topic.unit}"
             Question(QuestionType.GROWTH_AMOUNT, "求增长量(现期+增长率)", topic.name, stem, answer,
                 OptionGenerator.build(answer, difficulty, random), topic.unit, explanation, difficulty)
         }

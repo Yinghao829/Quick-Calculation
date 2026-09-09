@@ -28,6 +28,15 @@ class NumberUtilTest {
     }
 
     @Test
+    fun formatFactor_preservesRatePrecision() {
+        assertEquals("1.05", NumberUtil.formatFactor(0.05))
+        assertEquals("1.125", NumberUtil.formatFactor(0.125))
+        assertEquals("1.175", NumberUtil.formatFactor(0.175))
+        assertEquals("1.1", NumberUtil.formatFactor(0.10))
+        assertEquals("0.8", NumberUtil.formatFactor(-0.20))
+    }
+
+    @Test
     fun withinTolerance_relative() {
         assertTrue(NumberUtil.withinTolerance(100.4, 100.0, 0.005))
         assertFalse(NumberUtil.withinTolerance(101.0, 100.0, 0.005))

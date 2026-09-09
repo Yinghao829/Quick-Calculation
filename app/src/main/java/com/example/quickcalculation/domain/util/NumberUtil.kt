@@ -16,6 +16,9 @@ object NumberUtil {
     fun formatPercent(rate: Double, decimals: Int = 1): String =
         "${format(rate * 100, decimals)}%"
 
+    /** 增长因子 (1+rate) 展示：固定 3 位小数，保证千分位精度增长率（如 0.125 → 1.125）不丢失。 */
+    fun formatFactor(rate: Double): String = format(1 + rate, 3)
+
     fun withinTolerance(user: Double, correct: Double, tolerance: Double): Boolean {
         if (correct == 0.0) return abs(user - correct) <= tolerance
         return abs(user - correct) / abs(correct) <= tolerance

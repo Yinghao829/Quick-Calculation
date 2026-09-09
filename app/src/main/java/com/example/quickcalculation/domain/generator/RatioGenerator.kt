@@ -27,13 +27,13 @@ object RatioGenerator {
             0 -> Triple("现期比重", presentRatio(p, q),
                 "现期比重 = 部分现期 ÷ 整体现期 = ${NumberUtil.format(p, dec)} ÷ ${NumberUtil.format(q, dec)} = ${NumberUtil.formatPercent(presentRatio(p, q))}")
             1 -> Triple("基期比重", baseRatio(p, q, a, b),
-                "基期比重 = (P/Q) × (1+b) ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${NumberUtil.format(1 + b, dec)} ÷ ${NumberUtil.format(1 + a, dec)} = ${NumberUtil.formatPercent(baseRatio(p, q, a, b))}")
+                "基期比重 = (P/Q) × (1+b) ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${NumberUtil.formatFactor(b)} ÷ ${NumberUtil.formatFactor(a)} = ${NumberUtil.formatPercent(baseRatio(p, q, a, b))}")
             else -> {
                 // 两期比重差可为负（部分增速低于整体）；V1 仅出正差距题（与增长量任务舍弃「减少量」同理），
                 // 并对接近 0 的差距取一个下限，避免 roundForDifficulty 后坍缩为 0。
                 val gap = abs(gapRatio(p, q, a, b))
                 Triple("两期比重差", gap,
-                    "两期比重差 = (P/Q) × |a−b| ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${NumberUtil.formatPercent(abs(a - b))} ÷ ${NumberUtil.format(1 + a, dec)} = ${NumberUtil.formatPercent(gap)}")
+                    "两期比重差 = (P/Q) × |a−b| ÷ (1+a) = ${NumberUtil.formatPercent(presentRatio(p, q))} × ${NumberUtil.formatPercent(abs(a - b))} ÷ ${NumberUtil.formatFactor(a)} = ${NumberUtil.formatPercent(gap)}")
             }
         }
         // 比重/比重差天然落在小数区间（0~1），选择题按百分比（%）作答，故答案以百分点计（×100）。

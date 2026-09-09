@@ -31,7 +31,7 @@ object MultipleGenerator {
         } else {
             val answer = baseMultiple(a, b, aRate, bRate)
             val stem = "${year}年A地区${topic.name}为${NumberUtil.format(a, dec)}${topic.unit}（增速${NumberUtil.formatPercent(aRate)}），B地区为${NumberUtil.format(b, dec)}${topic.unit}（增速${NumberUtil.formatPercent(bRate)}），求基期倍数。"
-            val explanation = "基期倍数 = (A÷(1+a)) ÷ (B÷(1+b)) = (${NumberUtil.format(a, dec)}÷${NumberUtil.format(1 + aRate, dec)}) ÷ (${NumberUtil.format(b, dec)}÷${NumberUtil.format(1 + bRate, dec)}) = ${NumberUtil.format(answer, dec)}倍"
+            val explanation = "基期倍数 = (A÷(1+a)) ÷ (B÷(1+b)) = (${NumberUtil.format(a, dec)}÷${NumberUtil.formatFactor(aRate)}) ÷ (${NumberUtil.format(b, dec)}÷${NumberUtil.formatFactor(bRate)}) = ${NumberUtil.format(answer, dec)}倍"
             Question(QuestionType.MULTIPLE, "基期倍数", topic.name, stem, GenerationUtil.roundForDifficulty(answer, difficulty),
                 OptionGenerator.build(GenerationUtil.roundForDifficulty(answer, difficulty), difficulty, random), "倍", explanation, difficulty)
         }

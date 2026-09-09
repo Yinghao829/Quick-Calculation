@@ -32,7 +32,7 @@ object AverageGenerator {
         } else {
             val answer = baseAverage(total, count, a, b)
             val stem = "${year}年${topic.name}总量为${NumberUtil.format(total, dec)}亿元（增速${NumberUtil.formatPercent(a)}），涉及人数${NumberUtil.format(count, dec)}万人（增速${NumberUtil.formatPercent(b)}），求基期平均数。"
-            val explanation = "基期平均数 = (总量÷(1+a)) ÷ (个数÷(1+b)) = (${NumberUtil.format(total, dec)}÷${NumberUtil.format(1 + a, dec)}) ÷ (${NumberUtil.format(count, dec)}÷${NumberUtil.format(1 + b, dec)}) × 10000 = ${NumberUtil.format(answer, dec)}元/人"
+            val explanation = "基期平均数 = (总量÷(1+a)) ÷ (个数÷(1+b)) = (${NumberUtil.format(total, dec)}÷${NumberUtil.formatFactor(a)}) ÷ (${NumberUtil.format(count, dec)}÷${NumberUtil.formatFactor(b)}) × 10000 = ${NumberUtil.format(answer, dec)}元/人"
             Question(QuestionType.AVERAGE, "基期平均数", topic.name, stem, GenerationUtil.roundForDifficulty(answer, difficulty),
                 OptionGenerator.build(GenerationUtil.roundForDifficulty(answer, difficulty), difficulty, random), "元", explanation, difficulty)
         }

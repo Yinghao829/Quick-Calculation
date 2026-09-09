@@ -21,7 +21,7 @@ object BasePeriodGenerator {
             val answer = GenerationUtil.roundForDifficulty(bg.baseValue, difficulty)
             val a = GenerationUtil.roundForDifficulty(bg.currentValue, difficulty)
             val stem = "${year}年${topic.name}为${NumberUtil.format(a, dec)}${topic.unit}，同比增长${NumberUtil.formatPercent(r)}，求基期${topic.name}。"
-            val explanation = "基期量 = 现期量 ÷ (1 + 增长率) = ${NumberUtil.format(a, dec)} ÷ ${NumberUtil.format(1 + r, dec)} = ${NumberUtil.format(answer, dec)}${topic.unit}"
+            val explanation = "基期量 = 现期量 ÷ (1 + 增长率) = ${NumberUtil.format(a, dec)} ÷ ${NumberUtil.formatFactor(r)} = ${NumberUtil.format(answer, dec)}${topic.unit}"
             Question(
                 type = QuestionType.BASE_PERIOD, subType = "求基期量", topic = topic.name,
                 stem = stem, correctAnswer = answer,
@@ -32,7 +32,7 @@ object BasePeriodGenerator {
             // 求现期量：已知基期 B 与增长率 r，求 A = B × (1+r)
             val answer = GenerationUtil.roundForDifficulty(bg.currentValue, difficulty)
             val stem = "${year}年${topic.name}为${NumberUtil.format(b, dec)}${topic.unit}，同比增长${NumberUtil.formatPercent(r)}，求现期${topic.name}。"
-            val explanation = "现期量 = 基期量 × (1 + 增长率) = ${NumberUtil.format(b, dec)} × ${NumberUtil.format(1 + r, dec)} = ${NumberUtil.format(answer, dec)}${topic.unit}"
+            val explanation = "现期量 = 基期量 × (1 + 增长率) = ${NumberUtil.format(b, dec)} × ${NumberUtil.formatFactor(r)} = ${NumberUtil.format(answer, dec)}${topic.unit}"
             Question(
                 type = QuestionType.BASE_PERIOD, subType = "求现期量", topic = topic.name,
                 stem = stem, correctAnswer = answer,
